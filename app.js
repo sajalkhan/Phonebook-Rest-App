@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const session = require('express-session');
 const { check, validationResult } = require('express-validator');
 
 //init app
@@ -18,17 +17,17 @@ app.use(bodyParser.json());
 
 
 
-// Express messages middleware
-app.use(require('connect-flash')());
-app.use(function (req, res, next) {
-  res.locals.messages = require('express-messages')(req, res);
-  next();
-});
+// // Express messages middleware
+// app.use(require('connect-flash')());
+// app.use(function (req, res, next) {
+//   res.locals.messages = require('express-messages')(req, res);
+//   next();
+// });
 
 
 //set routes
-const pages = require('./Routes/pages');
+const contactInfo = require('./Routes/userContact');
 
-app.use('/',pages);
+app.use('/',contactInfo);
 
 module.exports = app;
