@@ -35,14 +35,24 @@ router.post('/addnewContact', contactInfoValidation(contactSchema.contactInfo,'b
     var name = req.body.name;
     var phone = req.body.phone;
 
-    var contat = new contact_model({
-        name: name,
-        phone: phone
-    });
-
-    contat.save((err) => {
-        req.flash('success','Contact Added Successfully!');
-        res.redirect('/');
+    contact_model.findOne({phone: phone} , (err, data)=>{
+        if(data)
+        {
+            req.flash('danger',`${phone} number exists, choose another number`);
+            res.redirect('/');
+        }
+        else
+        {
+            var contat = new contact_model({
+                name: name,
+                phone: phone
+            });
+        
+            contat.save((err) => {
+                req.flash('success','Contact Added Successfully!');
+                res.redirect('/');
+            })
+        }
     })
 
 });
@@ -56,25 +66,35 @@ router.post('/editContact', contactInfoValidation(contactSchema.contactInfo2, 'b
     var phone = req.body.phone;
     var id = req.body.id;
 
-    try {
-        contact_model.findById(id, (err, data) => {
-
-            if (err) return console.log('edit contact error ' + err);
-
-            // just assign value so it will update
-            data.name = name;
-            data.phone = phone;
-
-            data.save((err) => {
-                if (err) return console.log(err);
-                req.flash('success','Contact Edited Successfully!');
-                res.redirect('/');
-            });
-
-        });
-    } catch (err) {
-
-    }
+    contact_model.findOne({phone: phone} , (err, data)=>{
+        if(data)
+        {
+            req.flash('danger',`${phone} number exists, choose another number`);
+            res.redirect('/');
+        }
+        else
+        {
+            try {
+                contact_model.findById(id, (err, data) => {
+        
+                    if (err) return console.log('edit contact error ' + err);
+        
+                    // just assign value so it will update
+                    data.name = name;
+                    data.phone = phone;
+        
+                    data.save((err) => {
+                        if (err) return console.log(err);
+                        req.flash('success','Contact Edited Successfully!');
+                        res.redirect('/');
+                    });
+        
+                });
+            } catch (err) {
+        
+            }
+        }
+    })
 });
 
 /**
