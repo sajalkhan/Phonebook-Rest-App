@@ -122,9 +122,9 @@ router.post('/searchContact', contactInfoValidation(contactSchema.contactInfo3, 
     else
     {
         try {
-            await contact_model.findOne({ phone: phone }, (err, data) => {
+            await contact_model.find({ phone: phone }, (err, data) => {
                 if (err) return console.log('search '+err);
-    
+                
                 if(data)
                 {
                     res.render('contactPage', {
@@ -133,8 +133,9 @@ router.post('/searchContact', contactInfoValidation(contactSchema.contactInfo3, 
                         phone: data.phone,
                         id: data._id
                     });
-                }
-                else {
+                } 
+                else 
+                {
                     req.flash('warning',`${phone} number not found!`);
                     res.redirect('/');
                 }
