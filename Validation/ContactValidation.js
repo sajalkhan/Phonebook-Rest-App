@@ -1,27 +1,22 @@
 const joi = require('joi');
+const contactSchema = require('./contactInfoSchema');
 
-const contactSchema = joi.object().keys({
-    name: joi.string().max(20).required(),
-    phone: joi.string().regex(/^\(?([0-9]{3})\)?[-. ]?([0-9]{10})$/).required()
-});
+const contactInfoValidation = (req, res, next) => {
 
-const contactInfoValidation = () => {
+    const result = joi.validate(req, contactSchema);
 
-    return (req, res, next) => {
-        const result = joi.validate(req.body, contactSchema);
+    const { body } = req;
+    const { value, error } = result;
+    const valid = error == null;
 
-        const { value, error } = result;
-        const valid = error == null;
-
-        if (!valid) {
-            res.status(422).json({
-                message: 'Invalid request',
-                data: body
-            })
-        }
-        else {
-            next();
-        }
+    if (!valid) {
+        res.status(422).json({
+            message: 'please Enter a valid BD phone number',
+            data: body
+        })
+    }
+    else {
+        next();
     }
 }
 

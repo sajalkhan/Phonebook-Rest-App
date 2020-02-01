@@ -23,12 +23,12 @@
         <div class="table-wrapper">
             <div class="table-title">
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-7">
 						<h2>Manage <b>phoneBook</b></h2>
 					</div>
-					<div class="col-sm-6">
+					<div class="col-sm-5">
 						
-						<a href="#deleteContactModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>						
+						<!-- <a href="#deleteContactModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>						 -->
 						<a href="#addContactModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Contact</span></a>
 
 						<form class="btn example" style="margin:auto" method="POST" action="/searchContact">
@@ -59,7 +59,7 @@
                         <tr>
                             <td>
                                 <span class="custom-checkbox">
-                                    <input type="checkbox" id="checkbox1" name="options[]" value="1">
+                                    <input type="checkbox" id="checkbox<%= ct.id %>" name="options[]" value="<%= ct.id %>">
                                     <label for="checkbox1"></label>
                                 </span>
                             </td>
@@ -93,7 +93,7 @@
 						</div>
 						<div class="form-group">
 							<label>Contact</label>
-							<input type="text" value="<%= phone %>" name="phone" id="addNumber" placeholder="880-1740980351" maxlength="14" class="form-control" required>
+							<input type="text" value="<%= phone %>" name="phone" id="addNumber" placeholder="880-1234567890" maxlength="14" class="form-control" required>
 						</div>					
 					</div>
 					<div class="modal-footer">
@@ -121,7 +121,7 @@
 						</div>
 						<div class="form-group">
 							<label>Phone</label>
-							<input type="text" value="<%= phone %>" id="editPhone" name="phone" placeholder="Phone Number" maxlength="14" class="form-control" required>
+							<input type="text" value="<%= phone %>" id="editPhone" name="phone" placeholder="880-1234567890" maxlength="14" class="form-control" required>
 						</div>					
 					</div>
 					<div class="modal-footer">
@@ -144,7 +144,7 @@
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					</div>
 					<div class="modal-body">					
-						<p>Are you sure you want to delete these Records?</p>
+						<p>Are you sure you want to delete this Records?</p>
 						<p class="text-warning"><small>This action cannot be undone.</small></p>
 					</div>
 					<div class="modal-footer">

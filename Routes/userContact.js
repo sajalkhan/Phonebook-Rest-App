@@ -2,6 +2,7 @@ var joi = require('joi');
 var express = require('express');
 var router = express.Router();
 var contact_model = require('../Models/Contact');
+const contactInfoValidation = require('../Validation/ContactValidation');
 
 /**
  * Get all Contact
@@ -27,68 +28,29 @@ router.get('/', async (req, res) => {
 });
 
 /**
- * Get Edit pages 
- */
-router.get('/editContact/:id', async (req, res) => {
-    try {
-        await contact_model.findById(req.params.id, (err, data) => {
-            if (err) return console.log(err);
-
-            res.render('contactPage', {
-                name: data.name,
-                phone: data.phone,
-                id: data._id
-            });
-        });
-    } catch (err) {
-
-    }
-});
-
-/**
  * add new Contact
  */
-router.post('/addnewContact', async (req, res) => {
+router.post('/addnewContact', contactInfoValidation, async (req, res) => {
 
     var name = req.body.name;
     var phone = req.body.phone;
 
-    const { body } = req;
-
-    const contactSchema = joi.object().keys({
-        name: joi.string().max(20).required(),
-        phone: joi.string().regex(/^\(?([0-9]{3})\)?[-. ]?([0-9]{10})$/).required()
+    var contat = new contact_model({
+        name: name,
+        phone: phone
     });
 
-    const result = joi.validate(body, contactSchema);
-
-    const { value, error } = result;
-
-    const valid = error == null;
-    if (!valid) {
-        res.status(422).json({
-            message: 'Please enter a valid phone number',
-            data: body
-        })
-    }
-    else {
-        var contat = new contact_model({
-            name: name,
-            phone: phone
-        });
-
-        contat.save((err) => {
-            if (err) return console.log(err);
-            res.redirect('/');
-        });
-    }
+    contat.save((err) => {
+        if (err) return console.log(err);
+        res.redirect('/');
+    })
 
 });
 
 /**
  * Post edit contact 
  */
-router.post('/editContact', async (req, res) => {
+router.post('/editContact', contactInfoValidation, async (req, res) => {
 
     var name = req.body.name;
     var phone = req.body.phone;
@@ -99,34 +61,14 @@ router.post('/editContact', async (req, res) => {
 
             if (err) return console.log('edit contact error ' + err);
 
-            const { body } = req;
-            delete body.id;
+            // just assign value so it will update
+            data.name = name;
+            data.phone = phone;
 
-            const contactSchema = joi.object().keys({
-                name: joi.string().max(20).required(),
-                phone: joi.string().regex(/^\(?([0-9]{3})\)?[-. ]?([0-9]{10})$/).required()
+            data.save((err) => {
+                if (err) return console.log(err);
+                res.redirect('/');
             });
-
-            const result = joi.validate(body, contactSchema);
-            const { value, error } = result;
-
-            const valid = error == null;
-            if (!valid) {
-                res.status(422).json({
-                    message: 'Please enter a valid phone number',
-                    data: body
-                })
-            }
-            else {
-                // just assign value so it will update
-                data.name = name;
-                data.phone = phone;
-
-                data.save((err) => {
-                    if (err) return console.log(err);
-                    res.redirect('/');
-                });
-            }
 
         });
     } catch (err) {
@@ -151,11 +93,16 @@ router.post('/DeleteContact', async (req, res) => {
 
 router.post('/searchContact', async (req, res) => {
 
-    try{
-        await contact_model.find({phone: req.body.phone}, (err, data)=>{
-            if(err) return console.log(err);
+    var phone = req.body.phone;
+    if (!phone) {
+        res.redirect('/');
+    }
 
-            res.render('contactPage',{
+    try {
+        await contact_model.find({ phone: req.body.phone }, (err, data) => {
+            if (err) return console.log(err);
+
+            res.render('contactPage', {
                 info: data,
                 name: data.name,
                 phone: data.phone,
@@ -163,9 +110,8 @@ router.post('/searchContact', async (req, res) => {
             });
         });
     }
-    catch(err)
-    {
-        
+    catch (err) {
+
     }
 });
 
