@@ -32,7 +32,7 @@
 						<a href="#addContactModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Contact</span></a>
 
 						<form class="btn example" style="margin:auto" method="POST" action="/searchContact">
-							<input type="text" class="form-control" id="searchPhone" placeholder="Search.." name="phone">
+							<input type="text" maxlength="14" class="form-control" id="searchPhone" placeholder="Search.." name="phone">
 							<button type="submit"><i class="fa fa-search"></i></button>
 						</form>
 						
@@ -157,6 +157,12 @@
 		</div>
 	</div>
 		
+
+	<!-- show all alert message from here via req.flash() -->
+	<div class="container" style="text-align: center;" id="messagediv">
+		<%- messages('messages', locals) %>  
+	</div>
+  
 	<script type="application/javascript" src="/Js/index.js"></script>
 </body>
 </html>                                		                            

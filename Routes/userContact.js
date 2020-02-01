@@ -1,7 +1,7 @@
-var joi = require('joi');
 var express = require('express');
 var router = express.Router();
 var contact_model = require('../Models/Contact');
+const contactSchema = require('../Validation/contactInfoSchema');
 const contactInfoValidation = require('../Validation/ContactValidation');
 
 /**
@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
 /**
  * add new Contact
  */
-router.post('/addnewContact', contactInfoValidation, async (req, res) => {
+router.post('/addnewContact', contactInfoValidation(contactSchema.contactInfo,'body'), async (req, res) => {
 
     var name = req.body.name;
     var phone = req.body.phone;
@@ -41,7 +41,7 @@ router.post('/addnewContact', contactInfoValidation, async (req, res) => {
     });
 
     contat.save((err) => {
-        if (err) return console.log(err);
+        req.flash('success','Contact Added Successfully!');
         res.redirect('/');
     })
 
@@ -50,7 +50,7 @@ router.post('/addnewContact', contactInfoValidation, async (req, res) => {
 /**
  * Post edit contact 
  */
-router.post('/editContact', contactInfoValidation, async (req, res) => {
+router.post('/editContact', contactInfoValidation(contactSchema.contactInfo2, 'body'), async (req, res) => {
 
     var name = req.body.name;
     var phone = req.body.phone;
@@ -67,6 +67,7 @@ router.post('/editContact', contactInfoValidation, async (req, res) => {
 
             data.save((err) => {
                 if (err) return console.log(err);
+                req.flash('success','Contact Edited Successfully!');
                 res.redirect('/');
             });
 
@@ -84,6 +85,7 @@ router.post('/DeleteContact', async (req, res) => {
     try {
         await contact_model.findByIdAndDelete(req.body.id, (err) => {
             if (err) return console.log(err);
+            req.flash('success','Contact Deleted Successfully!');
             res.redirect('/');
         });
     } catch (err) {

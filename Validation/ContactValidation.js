@@ -1,22 +1,26 @@
-const joi = require('joi');
-const contactSchema = require('./contactInfoSchema');
+const Joi = require('joi');
 
-const contactInfoValidation = (req, res, next) => {
+const contactInfoValidation = (schema, property) => {
 
-    const result = joi.validate(req, contactSchema);
+    return (req, res, next)=> {
 
-    const { body } = req;
-    const { value, error } = result;
-    const valid = error == null;
+        const { error } = Joi.validate(req[property], schema);
+        const valid = error == null;
+        
+        if (valid) 
+        {
+          next();
+        }
+        else 
+        {
+            // res.status(422).json({
+            //     message: 'please Enter a valid BD phone number',
+            //     data: req[property]
+            // });
+            req.flash('danger','please Enter a valid BD phone number!');
+            res.redirect('/');
+        }
 
-    if (!valid) {
-        res.status(422).json({
-            message: 'please Enter a valid BD phone number',
-            data: body
-        })
-    }
-    else {
-        next();
     }
 }
 

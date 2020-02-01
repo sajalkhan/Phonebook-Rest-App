@@ -14,6 +14,10 @@ const deleteContact = (id) => {
     document.getElementById('deleteId').value = id;
 }
 
+setTimeout(function() {
+    $('#messagediv').fadeOut('fast');
+}, 2000);
+
 	// $(document).ready(function () {
 	// 	// Activate tooltip
 	// 	$('[data-toggle="tooltip"]').tooltip();
