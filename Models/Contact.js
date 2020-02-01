@@ -7,8 +7,9 @@ const contactSchema = mongooose.Schema({
         require:true
     },
     phone:{
-        type: Number,
-        require: true
+        type: String,
+        require: true,
+        unique: true
     }
 });
 

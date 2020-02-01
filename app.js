@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { check, validationResult } = require('express-validator');
+const { body } = require('express-validator');
 
 //init app
 const app = express();
@@ -15,6 +15,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
+//set public folder
+app.use(express.static(path.join(__dirname,'public')));
 
 
 // // Express messages middleware
