@@ -113,27 +113,36 @@ router.post('/DeleteContact', async (req, res) => {
     }
 });
 
-router.post('/searchContact', async (req, res) => {
+router.post('/searchContact', contactInfoValidation(contactSchema.contactInfo3, 'body'), async (req, res) => {
 
     var phone = req.body.phone;
     if (!phone) {
         res.redirect('/');
     }
-
-    try {
-        await contact_model.find({ phone: req.body.phone }, (err, data) => {
-            if (err) return console.log(err);
-
-            res.render('contactPage', {
-                info: data,
-                name: data.name,
-                phone: data.phone,
-                id: data._id
+    else
+    {
+        try {
+            await contact_model.findOne({ phone: phone }, (err, data) => {
+                if (err) return console.log('search '+err);
+    
+                if(data)
+                {
+                    res.render('contactPage', {
+                        info: data,
+                        name: data.name,
+                        phone: data.phone,
+                        id: data._id
+                    });
+                }
+                else {
+                    req.flash('warning',`${phone} number not found!`);
+                    res.redirect('/');
+                }
             });
-        });
-    }
-    catch (err) {
-
+        }
+        catch (err) {
+    
+        }
     }
 });
 
