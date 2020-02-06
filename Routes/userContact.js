@@ -66,35 +66,26 @@ router.post('/editContact', contactInfoValidation(contactSchema.contactInfo2, 'b
     var phone = req.body.phone;
     var id = req.body.id;
 
-    contact_model.findOne({phone: phone} , (err, data)=>{
-        if(data)
-        {
-            req.flash('danger',`${phone} number exists, choose another number`);
-            res.redirect('/');
-        }
-        else
-        {
-            try {
-                contact_model.findById(id, (err, data) => {
-        
-                    if (err) return console.log('edit contact error ' + err);
-        
-                    // just assign value so it will update
-                    data.name = name;
-                    data.phone = phone;
-        
-                    data.save((err) => {
-                        if (err) return console.log(err);
-                        req.flash('success','Contact Edited Successfully!');
-                        res.redirect('/');
-                    });
-        
-                });
-            } catch (err) {
-        
-            }
-        }
-    })
+    try {
+        contact_model.findById(id, (err, data) => {
+
+            if (err) return console.log('edit contact error ' + err);
+
+            // just assign value so it will update
+            data.name = name;
+            data.phone = phone;
+
+            data.save((err) => {
+                if (err) return console.log(err);
+                req.flash('success','Contact Edited Successfully!');
+                res.redirect('/');
+            });
+
+        });
+    } catch (err) {
+
+    }
+    
 });
 
 /**
